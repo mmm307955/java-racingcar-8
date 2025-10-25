@@ -15,6 +15,9 @@ public class Application {
 
         System.out.println("시도할 횟수는 몇 회인가요?");
         int round = setRoundTimes();
+
+        System.out.println("실행 결과");
+        repeatUntilRound(round);
     }
 
     public static void setCarsNames() {
@@ -62,6 +65,13 @@ public class Application {
         }
     }
 
+    public static void repeatUntilRound(int round) {
+        for (int i = 0; i < round; i++) {
+            moveCarsOnce();
+            printRoundResult();
+        }
+    }
+
     public static void moveCarsOnce() {
         for (int carIndex = 0; carIndex < cars.size(); carIndex++) {
             if (isOverFour()) {
@@ -70,11 +80,22 @@ public class Application {
         }
     }
 
+    public static void printRoundResult() {
+        for (int carIndex = 0; carIndex < cars.size(); carIndex++) {
+            printNowPosition(carIndex);
+        }
+        System.out.println();
+    }
+
     public static boolean isOverFour() {
         return Randoms.pickNumberInRange(0, 9) >= 4;
     }
 
     public static void moveForward(int carIndex) {
         cars.get(carIndex).setPosition(cars.get(carIndex).getPosition() + 1);
+    }
+
+    public static void printNowPosition(int carIndex) {
+        System.out.println(cars.get(carIndex).getName() + " : " + "-".repeat(cars.get(carIndex).getPosition()));
     }
 }
