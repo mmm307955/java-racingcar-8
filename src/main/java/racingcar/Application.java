@@ -17,13 +17,26 @@ public class Application {
         String[] eachCarNames = splitCarNames();
 
         for (String name : eachCarNames) {
+            String strippedName = validateCarName(name);
+
             Car car = new Car();
-            car.setName(name);
+            car.setName(strippedName);
             cars.add(car);
         }
     }
 
     public static String[] splitCarNames() {
         return Console.readLine().split(",");
+    }
+
+    public static String validateCarName(String name) {
+        String strippedName = name.strip();
+        if (strippedName.length() > 5) {
+            throw new IllegalArgumentException("이름은 5자를 초과할 수 없습니다.");
+        }
+        if (strippedName.isBlank()) {
+            throw new IllegalArgumentException("빈 이름은 입력할 수 없습니다. ");
+        }
+        return strippedName;
     }
 }
