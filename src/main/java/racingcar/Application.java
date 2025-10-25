@@ -26,15 +26,17 @@ public class Application {
 
         for (String name : eachCarNames) {
             String strippedName = validateCarName(name);
-
-            Car car = new Car();
-            car.setName(strippedName);
-            cars.add(car);
+            createCar(strippedName);
         }
     }
 
     public static String[] splitCarNames() {
-        return Console.readLine().split(",");
+        String readCarNames = Console.readLine();
+        if (readCarNames.contains(",")) {
+            return readCarNames.split(",");
+        } else {
+            throw new IllegalArgumentException("쉼표를 포함하여 경주할 자동차 이름을 두 대 이상 입력해주세요.");
+        }
     }
 
     public static String validateCarName(String name) {
@@ -46,6 +48,12 @@ public class Application {
             throw new IllegalArgumentException("빈 이름은 입력할 수 없습니다. ");
         }
         return strippedName;
+    }
+
+    public static void createCar(String strippedName) {
+        Car car = new Car();
+        car.setName(strippedName);
+        cars.add(car);
     }
 
     public static int setRoundTimes() {
