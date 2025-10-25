@@ -1,6 +1,7 @@
 package racingcar;
 
 import camp.nextstep.edu.missionutils.Console;
+import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.List;
 import racingcar.domain.Car;
@@ -59,5 +60,21 @@ public class Application {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("올바른 시도 횟수를 입력해주세요.(숫자만 입력 가능하며 2,147,483,647 이하의 숫자만 허용됩니다.)");
         }
+    }
+
+    public static void moveCarsOnce() {
+        for (int carIndex = 0; carIndex < cars.size(); carIndex++) {
+            if (isOverFour()) {
+                moveForward(carIndex);
+            }
+        }
+    }
+
+    public static boolean isOverFour() {
+        return Randoms.pickNumberInRange(0, 9) >= 4;
+    }
+
+    public static void moveForward(int carIndex) {
+        cars.get(carIndex).setPosition(cars.get(carIndex).getPosition() + 1);
     }
 }
