@@ -18,6 +18,7 @@ public class Application {
 
         System.out.println("실행 결과");
         repeatUntilRound(round);
+        printWinners(cars);
     }
 
     public static void setCarsNames() {
@@ -97,5 +98,23 @@ public class Application {
 
     public static void printNowPosition(int carIndex) {
         System.out.println(cars.get(carIndex).getName() + " : " + "-".repeat(cars.get(carIndex).getPosition()));
+    }
+
+    public static void printWinners(List<Car> cars) {
+        int maxPosition = getMaxPosition(cars);
+        List<String> winnersNames = new ArrayList<>();
+        for (Car car : cars) {
+            if (car.getPosition() == maxPosition) {
+                winnersNames.add(car.getName());
+            }
+        }
+        System.out.println("최종 우승자 : " + String.join(", ", winnersNames));
+    }
+
+    public static int getMaxPosition(List<Car> cars) {
+        return cars.stream()
+                .mapToInt(Car::getPosition)
+                .max()
+                .orElse(0);
     }
 }
