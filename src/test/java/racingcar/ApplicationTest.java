@@ -42,7 +42,6 @@ class ApplicationTest extends NsTest {
         Application.main(new String[]{});
     }
 
-
     @DisplayName("각 자동차에 이름을 부여할 수 있다")
     @Test
     void 각_자동차에_이름을_부여할_수_있다() {
@@ -93,6 +92,22 @@ class ApplicationTest extends NsTest {
         }
     }
 
+    @DisplayName("우승자가 여러 명일 경우 쉼표(,)를 이용하여 구분한다")
+    @Test
+    void 우승자가_여러_명일_경우_쉼표를_이용하여_구분한다() {
+        assertRandomNumberInRangeTest(
+                () -> {
+                    run("pobi,java,woni", "1");
+                    assertThat(output()).contains(
+                            "pobi : -",
+                            "java : -",
+                            "woni : -",
+                            "최종 우승자 : pobi, java, woni"
+                    );
+                },
+                MOVING_FORWARD, MOVING_FORWARD, MOVING_FORWARD
+        );
+    }
 
     @DisplayName("시도 횟수가 올바르지 않으면 예외를 발생시킨다")
     @Test

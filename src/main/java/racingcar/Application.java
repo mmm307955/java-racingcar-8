@@ -1,17 +1,21 @@
 package racingcar;
 
 import camp.nextstep.edu.missionutils.Console;
-import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.List;
 import racingcar.domain.Car;
+import racingcar.strategy.MoveStrategy;
 import racingcar.strategy.RandomMoveStrategy;
 
 public class Application {
-    private static final List<Car> cars = new ArrayList<>();
-    private static final RandomMoveStrategy randomMoveStrategy = new RandomMoveStrategy();
+    private final List<Car> cars = new ArrayList<>();
+    private final RandomMoveStrategy randomMoveStrategy = new RandomMoveStrategy();
 
     public static void main(String[] args) {
+        new Application().run();
+    }
+
+    public void run() {
         System.out.println("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)");
         setCarsNames();
 
@@ -23,7 +27,7 @@ public class Application {
         printWinners(cars);
     }
 
-    public static void setCarsNames() {
+    private void setCarsNames() {
         String[] eachCarNames = splitCarNames();
 
         for (String name : eachCarNames) {
@@ -32,7 +36,7 @@ public class Application {
         }
     }
 
-    public static String[] splitCarNames() {
+    private String[] splitCarNames() {
         String readCarNames = Console.readLine();
         if (readCarNames.contains(",")) {
             return readCarNames.split(",");
@@ -41,7 +45,7 @@ public class Application {
         }
     }
 
-    public static String validateCarName(String name) {
+    private String validateCarName(String name) {
         String strippedName = name.strip();
         if (strippedName.length() > 5) {
             throw new IllegalArgumentException("이름은 5자를 초과할 수 없습니다.");
@@ -52,18 +56,18 @@ public class Application {
         return strippedName;
     }
 
-    public static void createCar(String strippedName) {
+    private void createCar(String strippedName) {
         Car car = new Car();
         car.setName(strippedName);
         cars.add(car);
     }
 
-    public static int setRoundTimes() {
+    private int setRoundTimes() {
         String input = Console.readLine().strip();
         return validateRound(input);
     }
 
-    public static int validateRound(String input) {
+    private int validateRound(String input) {
         try {
             int round = Integer.parseInt(input);
             if (round < 0) {
@@ -76,14 +80,14 @@ public class Application {
         }
     }
 
-    public static void repeatUntilRound(int round) {
+    private void repeatUntilRound(int round) {
         for (int i = 0; i < round; i++) {
             moveCarsOnce();
             printRoundResult();
         }
     }
 
-    public static void moveCarsOnce() {
+    private void moveCarsOnce() {
         for (int carIndex = 0; carIndex < cars.size(); carIndex++) {
             if (randomMoveStrategy.movable()) {
                 moveForward(carIndex);
@@ -91,22 +95,22 @@ public class Application {
         }
     }
 
-    public static void printRoundResult() {
+    private void printRoundResult() {
         for (int carIndex = 0; carIndex < cars.size(); carIndex++) {
             printNowPosition(carIndex);
         }
         System.out.println();
     }
 
-    public static void moveForward(int carIndex) {
+    private void moveForward(int carIndex) {
         cars.get(carIndex).setPosition(cars.get(carIndex).getPosition() + 1);
     }
 
-    public static void printNowPosition(int carIndex) {
+    private void printNowPosition(int carIndex) {
         System.out.println(cars.get(carIndex).getName() + " : " + "-".repeat(cars.get(carIndex).getPosition()));
     }
 
-    public static void printWinners(List<Car> cars) {
+    private void printWinners(List<Car> cars) {
         int maxPosition = getMaxPosition(cars);
         List<String> winnersNames = new ArrayList<>();
         for (Car car : cars) {
@@ -117,7 +121,7 @@ public class Application {
         System.out.println("최종 우승자 : " + String.join(", ", winnersNames));
     }
 
-    public static int getMaxPosition(List<Car> cars) {
+    private int getMaxPosition(List<Car> cars) {
         return cars.stream()
                 .mapToInt(Car::getPosition)
                 .max()
