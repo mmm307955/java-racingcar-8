@@ -1,11 +1,12 @@
 package racingcar;
 
-import camp.nextstep.edu.missionutils.Console;
+
 import java.util.ArrayList;
 import java.util.List;
 import racingcar.domain.Car;
-import racingcar.strategy.MoveStrategy;
 import racingcar.strategy.RandomMoveStrategy;
+import racingcar.view.InputView;
+import racingcar.view.OutputView;
 
 public class Application {
     private final List<Car> cars = new ArrayList<>();
@@ -16,13 +17,10 @@ public class Application {
     }
 
     public void run() {
-        System.out.println("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)");
         setCarsNames();
-
-        System.out.println("시도할 횟수는 몇 회인가요?");
         int round = setRoundTimes();
 
-        System.out.println("실행 결과");
+        OutputView.printResultMessage();
         repeatUntilRound(round);
         printWinners(cars);
     }
@@ -37,7 +35,7 @@ public class Application {
     }
 
     private String[] splitCarNames() {
-        String readCarNames = Console.readLine();
+        String readCarNames = InputView.inputCarNames();
         if (readCarNames.contains(",")) {
             return readCarNames.split(",");
         } else {
@@ -63,8 +61,8 @@ public class Application {
     }
 
     private int setRoundTimes() {
-        String input = Console.readLine().strip();
-        return validateRound(input);
+        String readRoundCount = InputView.inputTryCount().strip();
+        return validateRound(readRoundCount);
     }
 
     private int validateRound(String input) {
@@ -83,7 +81,7 @@ public class Application {
     private void repeatUntilRound(int round) {
         for (int i = 0; i < round; i++) {
             moveCarsOnce();
-            printRoundResult();
+            OutputView.printRoundResult(cars);
         }
     }
 
@@ -95,19 +93,8 @@ public class Application {
         }
     }
 
-    private void printRoundResult() {
-        for (int carIndex = 0; carIndex < cars.size(); carIndex++) {
-            printNowPosition(carIndex);
-        }
-        System.out.println();
-    }
-
     private void moveForward(int carIndex) {
         cars.get(carIndex).setPosition(cars.get(carIndex).getPosition() + 1);
-    }
-
-    private void printNowPosition(int carIndex) {
-        System.out.println(cars.get(carIndex).getName() + " : " + "-".repeat(cars.get(carIndex).getPosition()));
     }
 
     private void printWinners(List<Car> cars) {
@@ -118,7 +105,7 @@ public class Application {
                 winnersNames.add(car.getName());
             }
         }
-        System.out.println("최종 우승자 : " + String.join(", ", winnersNames));
+        OutputView.printWinners(winnersNames);
     }
 
     private int getMaxPosition(List<Car> cars) {
