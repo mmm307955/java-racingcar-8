@@ -5,9 +5,11 @@ import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.List;
 import racingcar.domain.Car;
+import racingcar.strategy.RandomMoveStrategy;
 
 public class Application {
     private static final List<Car> cars = new ArrayList<>();
+    private static final RandomMoveStrategy randomMoveStrategy = new RandomMoveStrategy();
 
     public static void main(String[] args) {
         System.out.println("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)");
@@ -83,7 +85,7 @@ public class Application {
 
     public static void moveCarsOnce() {
         for (int carIndex = 0; carIndex < cars.size(); carIndex++) {
-            if (isOverFour()) {
+            if (randomMoveStrategy.movable()) {
                 moveForward(carIndex);
             }
         }
@@ -94,10 +96,6 @@ public class Application {
             printNowPosition(carIndex);
         }
         System.out.println();
-    }
-
-    public static boolean isOverFour() {
-        return Randoms.pickNumberInRange(0, 9) >= 4;
     }
 
     public static void moveForward(int carIndex) {

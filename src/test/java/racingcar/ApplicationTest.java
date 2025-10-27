@@ -1,15 +1,18 @@
 package racingcar;
 
-import camp.nextstep.edu.missionutils.test.NsTest;
-import java.util.List;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import racingcar.domain.Car;
-
 import static camp.nextstep.edu.missionutils.test.Assertions.assertRandomNumberInRangeTest;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import camp.nextstep.edu.missionutils.test.NsTest;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import racingcar.domain.Car;
+import racingcar.strategy.AlwaysMoveStrategy;
 
 class ApplicationTest extends NsTest {
     private static final int MOVING_FORWARD = 4;
@@ -58,9 +61,12 @@ class ApplicationTest extends NsTest {
     }
 
     @DisplayName("주어진 횟수 동안 n대의 자동차는 전진 또는 멈출 수 있다")
-    @Test
-    void 주어진_횟수_동안_n대의_자동차는_전진_또는_멈출_수_있다() {
+    @ParameterizedTest
+    @ValueSource(ints = {5})
+    void 주어진_횟수_동안_n대의_자동차는_전진_또는_멈출_수_있다(int round) {
         // given
+        AlwaysMoveStrategy alwaysMoveStrategy = new AlwaysMoveStrategy();
+
         Car pobi = new Car();
         pobi.setName("pobi");
 
@@ -71,22 +77,19 @@ class ApplicationTest extends NsTest {
         woni.setName("woni");
 
         List<Car> cars = List.of(pobi, java, woni);
-        int round = 5;
 
         // when
         for (int i = 0; i < round; i++) {
             for (Car car : cars) {
-                if (Application.isOverFour()) {
+                if (alwaysMoveStrategy.movable()) {
                     car.setPosition(car.getPosition() + 1);
                 }
             }
         }
 
         // then
-        for (int i = 0; i < round; i++) {
-            for (Car car : cars) {
-                assertThat(car.getPosition()).isGreaterThan(0).isLessThan(round);
-            }
+        for (Car car : cars) {
+            assertThat(car.getPosition()).isEqualTo(round);
         }
     }
 
